@@ -1,0 +1,8 @@
+{
+  "name": "QDS",
+  "description": "QDS (Quantitative Decision System) - Web 4.0 prediction market terminal, Multi-Model Agentic Market Chatbot, Token Launchpad, Conway AI Automaton, and Post-Quantum Cryptography on Somnia Layer 1 blockchain.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
