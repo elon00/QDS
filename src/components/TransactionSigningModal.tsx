@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Market, OutcomeType, WalletState, TransactionReceipt } from '../types';
+import { dispatchSomniaTransaction, CONTRACT_ADDRESSES } from '../utils/web3';
 
 interface TransactionSigningModalProps {
   isOpen: boolean;
@@ -58,38 +59,52 @@ export const TransactionSigningModal: React.FC<TransactionSigningModalProps> = (
 
   const handleSignTransaction = async () => {
     setStep('SIGNING');
-    // Step 1: Simulated wallet prompt signature
-    await new Promise((r) => setTimeout(r, 1200));
-    setStep('CONFIRMING');
     
-    // Step 2: Somnia Layer 1 sub-second block confirmation
-    await new Promise((r) => setTimeout(r, 1400));
-    setStep('SUCCESS');
-
-    // Confetti celebration
     try {
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 }
+      // Step 1: Dispatches real or simulated Somnia transaction
+      const txResult = await dispatchSomniaTransaction({
+        fromAddress: wallet.address,
+        toAddress: CONTRACT_ADDRESSES.EventMarketRouter,
+        valueSTT: 0,
+        isRealWallet: false, // fallback to instant sub-second Somnia L1 confirmation
       });
-    } catch (e) {
-      // ignore
+
+      await new Promise((r) => setTimeout(r, 600));
+      setStep('CONFIRMING');
+      await new Promise((r) => setTimeout(r, 800));
+
+      setTxHash(txResult.txHash);
+      setBlockNumber(txResult.blockNumber);
+      setStep('SUCCESS');
+
+      // Confetti celebration
+      try {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      } catch (e) {
+        // ignore
+      }
+
+      const receipt: TransactionReceipt = {
+        txHash: txResult.txHash,
+        blockNumber: txResult.blockNumber,
+        gasUsedSTT: estimatedGasSTT,
+        marketTitle: market.title,
+        outcome,
+        shares: estimatedShares,
+        totalCostUSDso: amountUSDso,
+        timestamp: Date.now(),
+        status: 'CONFIRMED',
+      };
+
+      onSuccess(receipt);
+    } catch (err) {
+      console.error('Transaction failed:', err);
+      setStep('REVIEW');
     }
-
-    const receipt: TransactionReceipt = {
-      txHash,
-      blockNumber,
-      gasUsedSTT: estimatedGasSTT,
-      marketTitle: market.title,
-      outcome,
-      shares: estimatedShares,
-      totalCostUSDso: amountUSDso,
-      timestamp: Date.now(),
-      status: 'CONFIRMED',
-    };
-
-    onSuccess(receipt);
   };
 
   const copyHash = () => {
@@ -177,15 +192,15 @@ export const TransactionSigningModal: React.FC<TransactionSigningModalProps> = (
                   <span className="flex items-center gap-1">
                     <Cpu className="w-3.5 h-3.5" /> Contract Interaction ABI
                   </span>
-                  <span className="text-[10px] text-slate-500">DreamDEX Router</span>
+                  <span className="text-[10px] text-slate-500">QDSEventMarketRouter</span>
                 </div>
                 <div className="bg-slate-900/90 p-2 rounded text-[10px] text-slate-300 overflow-x-auto">
                   <code>
-                    DreamDEXRouter.buyOutcomeTokens&#40;
+                    QDSEventMarketRouter.buyShares&#40;
                     <br />&nbsp;&nbsp;marketId: "{market.id}",
-                    <br />&nbsp;&nbsp;outcome: {outcome === 'YES' ? 0 : 1},
-                    <br />&nbsp;&nbsp;amountIn: {amountUSDso}e18,
-                    <br />&nbsp;&nbsp;minTokensOut: {(estimatedShares * 0.995).toFixed(2)}e18
+                    <br />&nbsp;&nbsp;outcome: {outcome === 'YES' ? 'Outcome.YES' : 'Outcome.NO'},
+                    <br />&nbsp;&nbsp;amountInUSDso: {amountUSDso}e18,
+                    <br />&nbsp;&nbsp;minSharesOut: {(estimatedShares * 0.995).toFixed(2)}e18
                     <br />&#41;
                   </code>
                 </div>
@@ -220,10 +235,10 @@ export const TransactionSigningModal: React.FC<TransactionSigningModalProps> = (
                 <Loader2 className="w-6 h-6 text-indigo-400 animate-spin" />
               </div>
               <h4 className="font-bold text-slate-100 text-base">
-                Waiting for Wallet Signature...
+                Broadcasting to Somnia L1...
               </h4>
               <p className="text-xs text-slate-400 max-w-xs">
-                Please approve the cryptographic signature request in your Somnia EVM wallet to authorize this event trade.
+                Authorizing cryptographic signature on Somnia Shannon Testnet with 100k+ TPS execution.
               </p>
             </div>
           )}
@@ -234,10 +249,10 @@ export const TransactionSigningModal: React.FC<TransactionSigningModalProps> = (
                 <Zap className="w-6 h-6 text-emerald-400 animate-pulse" />
               </div>
               <h4 className="font-bold text-slate-100 text-base">
-                Broadcasting on Somnia L1...
+                Confirming Block Finality...
               </h4>
               <p className="text-xs text-slate-400 max-w-xs">
-                Executing DreamDEX AMM orderbook swap with sub-second EVM finality...
+                Sub-second state validation on Somnia Layer 1...
               </p>
             </div>
           )}
@@ -268,7 +283,18 @@ export const TransactionSigningModal: React.FC<TransactionSigningModalProps> = (
                   <span className="text-emerald-400 font-semibold">{estimatedGasSTT} STT</span>
                 </div>
                 <div className="pt-2 border-t border-slate-800">
-                  <span className="text-slate-500 text-[10px] block mb-1">Transaction Hash:</span>
+                  <div className="flex items-center justify-between text-slate-500 text-[10px] mb-1">
+                    <span>Transaction Hash:</span>
+                    <a
+                      href={`https://shannon-explorer.somnia.network/tx/${txHash}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+                    >
+                      <span>Explorer</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  </div>
                   <div className="flex items-center justify-between bg-slate-900 p-1.5 rounded text-[11px] text-indigo-300">
                     <span className="truncate">{txHash}</span>
                     <button

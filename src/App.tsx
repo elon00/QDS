@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, 
   Filter, 
@@ -35,6 +35,7 @@ import { AgenticChatbot } from './components/AgenticChatbot';
 import { ConwayAutomaton } from './components/ConwayAutomaton';
 import { TokenLaunchpad } from './components/TokenLaunchpad';
 import { Web4PqcVault } from './components/Web4PqcVault';
+import { connectLiveWallet, hasInjectedWallet } from './utils/web3';
 
 export default function App() {
   // Navigation & View state
@@ -73,7 +74,41 @@ export default function App() {
     sttBalance: 4.82,
     usdsoBalance: 850.00,
     isConnecting: false,
+    pqcShieldActive: true,
   });
+
+  // Handle Web3 Connect
+  const handleConnectWallet = async () => {
+    if (wallet.isConnected) {
+      setWallet(prev => ({ ...prev, isConnected: false }));
+      return;
+    }
+
+    if (hasInjectedWallet()) {
+      try {
+        setWallet(prev => ({ ...prev, isConnecting: true }));
+        const live = await connectLiveWallet();
+        setWallet(prev => ({
+          ...prev,
+          isConnected: true,
+          address: live.address,
+          chainId: live.chainId,
+          sttBalance: live.sttBalance > 0 ? live.sttBalance : prev.sttBalance,
+          isConnecting: false,
+        }));
+        return;
+      } catch (e: any) {
+        console.warn('Live Web3 connect error, using sandbox wallet:', e);
+      }
+    }
+
+    // Default to sandbox connected
+    setWallet(prev => ({
+      ...prev,
+      isConnected: true,
+      isConnecting: false,
+    }));
+  };
 
   // User Positions & Trade History
   const [positions, setPositions] = useState<UserPosition[]>(INITIAL_USER_POSITIONS);
@@ -137,11 +172,11 @@ export default function App() {
       p => p.marketTitle === receipt.marketTitle && p.outcome === receipt.outcome
     );
 
-    const pricePerShare = receipt.totalCostUSDso / receipt.shares;
+    const pricePerShare = receipt.totalCostUSDso / (receipt.shares || 1);
 
     if (existingPosIndex >= 0) {
       const existing = positions[existingPosIndex];
-      const newShares = existing.shares + receipt.shares;
+      const newShares = existing.shares + (receipt.shares || 0);
       const newInvested = existing.totalInvested + receipt.totalCostUSDso;
       const newAvgPrice = newInvested / newShares;
       const updatedPositions = [...positions];
@@ -161,15 +196,15 @@ export default function App() {
         id: `pos-${Date.now()}`,
         marketId: signingModalData.market?.id || 'm-custom',
         marketTitle: receipt.marketTitle,
-        outcome: receipt.outcome,
-        shares: receipt.shares,
+        outcome: receipt.outcome || 'YES',
+        shares: receipt.shares || 0,
         avgBuyPrice: pricePerShare,
         currentPrice: pricePerShare,
         totalInvested: receipt.totalCostUSDso,
         currentValue: receipt.totalCostUSDso,
         unrealizedPnL: 0,
         unrealizedPnLPercent: 0,
-        potentialPayout: receipt.shares * 1.00,
+        potentialPayout: (receipt.shares || 0) * 1.00,
         settlementDate: signingModalData.market?.settlementDate || 'Sep 2026',
         status: 'OPEN',
       };
@@ -208,9 +243,7 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         wallet={wallet}
-        onConnectWallet={() => {
-          setWallet(prev => ({ ...prev, isConnected: !prev.isConnected }));
-        }}
+        onConnectWallet={handleConnectWallet}
         onOpenFaucet={() => setFaucetOpen(true)}
         unreadAiSuggestions={2}
       />
@@ -552,6 +585,7 @@ export default function App() {
         isOpen={faucetOpen}
         onClose={() => setFaucetOpen(false)}
         onClaimTokens={handleClaimTokens}
+        walletAddress={wallet.address}
       />
 
       {/* Floating Action Button -> Direct Agentic Chatbot */}

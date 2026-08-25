@@ -11,7 +11,10 @@ import {
   ExternalLink, 
   CheckCircle2,
   FileText,
-  MessageSquare
+  MessageSquare,
+  Rocket,
+  Shield,
+  Bot
 } from 'lucide-react';
 
 interface HackathonPitchDeckProps {}
@@ -22,46 +25,47 @@ export const HackathonPitchDeck: React.FC<HackathonPitchDeckProps> = () => {
   const slides = [
     {
       title: 'Slide 1: Problem & Vision',
-      heading: 'The Fragmented State of Web3 Prediction Markets',
+      heading: 'The Next Generation of Prediction Markets & DeFi on Somnia L1',
       points: [
-        'High latency & high gas fees on legacy L1s prevent real-time algorithmic market making and retail adoption.',
-        'Binary outcomes are complex for everyday users without explainable probabilistic intelligence.',
-        'Vision: QDS AI Prediction Radar combines Somnia 100k+ TPS speed with Gemini 3.7 Copilot intelligence to make on-chain prediction trading effortless.'
+        'High latency & high gas fees on legacy L1s prevent high-frequency prediction trading, automated market making, and retail adoption.',
+        'Binary outcomes and risk parameters are opaque for retail users without explainable probabilistic intelligence and multi-model agentic guidance.',
+        'Vision: QDS combines Somnia 100k+ TPS speed with Multi-Model Agentic AI (Gemini 3.7 Flash Thinking & 3.1 Pro), Token Launchpad bonding curves, Conway cellular volatility modeling, and Web 4.0 Post-Quantum Lattice Security.'
       ],
       tag: 'Problem & Opportunity'
     },
     {
-      title: 'Slide 2: The Solution & Architecture',
-      heading: 'AI-Guided, Non-Custodial Event Contracts on Somnia L1',
+      title: 'Slide 2: Complete Architecture & Pillars',
+      heading: 'Integrated Web 4.0 Quantitative Ecosystem on Somnia EVM',
       points: [
-        'Real-time Market Radar scanning odds, implied probabilities, and on-chain liquidity depth.',
-        'Explainable AI Copilot providing dynamic fair-value probability matrices, bull/bear drivers, and risk scores.',
-        'QDS Bot Kit Studio enabling one-click deployment of automated sentiment and arbitrage agents.',
-        'Sub-second EVM execution powered by Somnia Shannon Testnet with near-zero STT gas overhead.'
+        'Event Contract Market Radar: Real-time probability scanner, dynamic odds quotes, and oracle resolution rules on Somnia Shannon Testnet.',
+        'Multi-Model Agentic Chatbot: Autonomous reasoning traces, image chart pattern perception, and 1-click execution triggers across all views.',
+        'Fair-Launch Token Launchpad: Mathematical quadratic bonding curve P(S) = P0 + k*S^2 with AI anti-rug audits and auto-graduation at $69,000 USDso.',
+        'Conway AI Automaton: Emergent 2D cellular automaton market simulator modeling trader swarms, entropy, and flash crash dynamics.',
+        'Web 4.0 Post-Quantum Cryptography Vault: 256-bit NIST PQC lattice signature verification (CRYSTALS-Kyber-1024 / Dilithium-5) on Somnia L1.'
       ],
       tag: 'Product Architecture'
     },
     {
       title: 'Slide 3: 2-Minute Demo Video Script',
-      heading: 'Step-by-Step Demo Flow for Hackathon Submission',
+      heading: 'Step-by-Step Demo Flow for Hackathon Submission Video',
       points: [
-        '0:00 - 0:20: Hook & The Problem (Slow, confusing prediction markets).',
-        '0:20 - 0:50: Live Tour of QDS AI Radar & Probability Trajectory Chart.',
-        '0:50 - 1:20: AI Copilot in Action (Asking about BTC $120k & reviewing explainable risk breakdown).',
-        '1:20 - 1:45: Interactive Web3 EVM Trade Execution with Somnia sub-second finality & confetti.',
-        '1:45 - 2:00: Bot Kit Studio & Future Roadmap on Somnia Mainnet.'
+        '0:00 - 0:20: Hook & Overview (Fast EVM prediction trading meets Multi-Model AI on Somnia L1).',
+        '0:20 - 0:45: Market Radar & Live Probability Trajectory (Trading YES/NO with sub-second finality).',
+        '0:45 - 1:15: Agentic Chatbot Deep-Dive (Selecting Gemini 3.7 Thinking, visual chart analysis, and auto-executing on-chain trades).',
+        '1:15 - 1:40: Token Launchpad & AI Anti-Rug Audit (Deploying bonding curve tokens with automated Somnia DEX graduation).',
+        '1:40 - 2:00: Conway Automaton & PQC Vault (Cellular market telemetry and quantum-immune Kyber-1024 key verification).'
       ],
       tag: 'Submission Deliverable'
     },
     {
       title: 'Slide 4: Judging Criteria Alignment (100% Target)',
-      heading: 'How QDS AI Radar Maximizes All 5 Score Pillars',
+      heading: 'How QDS Maximizes All 5 Hackathon Score Pillars',
       points: [
-        'Technical Implementation (25%): Full EVM ABI transaction simulation, QDS AMM pricing invariants, Gemini 3.7 API integration, and Bot Kit SDK exporter.',
-        'UX & Design (20%): Pro trading terminal meets clean consumer interface with live SVG charts, dark/light contrast, and comprehensive onboarding.',
-        'Innovation & Originality (20%): Autonomous AI explainability layer coupled with non-custodial EIP-712 transaction authorization.',
-        'Business & Ecosystem Impact (20%): Drives organic STT gas consumption, expands QDS TVL, and introduces consumer-ready prediction markets.',
-        'Presentation & Demo (15%): Structured 5-slide deck, interactive Web3 story mode, and end-to-end working testnet prototype.'
+        'Technical Implementation (25%): Full Solidity Smart Contracts suite (QDSEventMarketRouter, QDSBondingCurveToken, QDSQuantumVault, QDSConwayRegistry), real Web3 wallet integration, and automated Somnia Shannon Testnet deployer.',
+        'UX & Design (20%): Pro trading terminal meets intuitive consumer interface with live SVG charts, voice readout, dark theme, and dual grid/table views.',
+        'Innovation & Originality (20%): First platform unifying Agentic Multi-Model LLMs, Conway cellular market emergence, and NIST Post-Quantum lattice cryptography.',
+        'Business & Ecosystem Impact (20%): Drives organic STT gas consumption, expands Somnia TVL, and creates sustainable trading activity.',
+        'Presentation & Demo (15%): Structured 4-slide pitch deck, interactive Web3 story guide, and production-ready working prototype.'
       ],
       tag: 'Scoring Breakdown'
     },
@@ -73,13 +77,13 @@ export const HackathonPitchDeck: React.FC<HackathonPitchDeckProps> = () => {
       <div className="text-center space-y-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-xs font-semibold">
           <Trophy className="w-3.5 h-3.5" />
-          <span>Somnia × QDS Hackathon ($5,000 USDso Prize Pool)</span>
+          <span>Somnia × DreamDEX Hackathon ($5,000 USDso Prize Pool)</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-100 tracking-tight">
-          Project Pitch Deck & Submission Blueprint
+          QDS Project Pitch Deck & Submission Blueprint
         </h1>
         <p className="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto">
-          A polished investor and judge presentation deck aligned directly with official judging criteria.
+          A polished judge presentation deck aligned directly with official judging criteria and Somnia L1 capabilities.
         </p>
       </div>
 
@@ -119,68 +123,33 @@ export const HackathonPitchDeck: React.FC<HackathonPitchDeckProps> = () => {
                 : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
             }`}
           >
-            {s.title}
+            {s.title.split(':')[0]}
           </button>
         ))}
       </div>
 
-      {/* Slide Presentation Card */}
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-          <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+      {/* Active Slide Display */}
+      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          <span className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
             {slides[activeSlide].tag}
           </span>
-          <span className="text-xs font-mono text-slate-400">
-            SLIDE 0{activeSlide + 1} OF 0{slides.length}
+          <span className="text-xs font-mono text-slate-500">
+            Slide {activeSlide + 1} of {slides.length}
           </span>
         </div>
 
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-100 mb-6">
-            {slides[activeSlide].heading}
-          </h2>
+        <h2 className="text-xl sm:text-2xl font-black text-slate-100">
+          {slides[activeSlide].heading}
+        </h2>
 
-          <div className="space-y-4">
-            {slides[activeSlide].points.map((pt, i) => (
-              <div key={i} className="flex items-start gap-3 bg-slate-950/70 p-4 rounded-xl border border-slate-800/80">
-                <div className="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center shrink-0 mt-0.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
-                </div>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
-                  {pt}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Community & Documentation Resources */}
-        <div className="pt-6 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-          <a
-            href="https://docs.dreamdex.io/developers/event-contracts"
-            target="_blank"
-            rel="noreferrer"
-            className="p-3 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-slate-300 flex items-center justify-between transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-indigo-400" />
-              <span>Official Event Contracts Docs</span>
+        <div className="space-y-4">
+          {slides[activeSlide].points.map((pt, i) => (
+            <div key={i} className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs sm:text-sm text-slate-300">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+              <span>{pt}</span>
             </div>
-            <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
-          </a>
-
-          <a
-            href="https://t.me/+XHq0F0JXMyhmMzM0"
-            target="_blank"
-            rel="noreferrer"
-            className="p-3 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-slate-300 flex items-center justify-between transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <MessageSquare className="w-4 h-4 text-cyan-400" />
-              <span>Somnia Dev Community & STT Faucet</span>
-            </div>
-            <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
-          </a>
+          ))}
         </div>
       </div>
     </div>

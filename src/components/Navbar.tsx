@@ -13,9 +13,12 @@ import {
   Coins,
   Rocket,
   ShieldCheck,
-  Cpu
+  Cpu,
+  ExternalLink,
+  PlusCircle
 } from 'lucide-react';
 import { WalletState } from '../types';
+import { addSomniaNetworkToWallet, hasInjectedWallet } from '../utils/web3';
 
 export type NavTabType = 'radar' | 'agent_chat' | 'conway' | 'launchpad' | 'pqc' | 'portfolio' | 'botkit' | 'story' | 'pitch';
 
@@ -37,11 +40,24 @@ export const Navbar: React.FC<NavbarProps> = ({
   unreadAiSuggestions,
 }) => {
   const [walletDropdownOpen, setWalletDropdownOpen] = useState(false);
+  const [networkAdding, setNetworkAdding] = useState(false);
+
+  const handleAddSomnia = async () => {
+    setNetworkAdding(true);
+    try {
+      await addSomniaNetworkToWallet();
+      alert('Somnia Shannon Testnet successfully added to your wallet!');
+    } catch (e: any) {
+      alert(e.message || 'Could not add Somnia network.');
+    } finally {
+      setNetworkAdding(false);
+    }
+  };
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 text-slate-100">
+    <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-slate-100">
       {/* Top network ticker bar */}
-      <div className="bg-gradient-to-r from-emerald-950/60 via-slate-900 to-indigo-950/60 border-b border-slate-800/80 px-4 py-1 text-xs flex items-center justify-between">
+      <div className="bg-gradient-to-r from-emerald-950/70 via-slate-900 to-indigo-950/70 border-b border-slate-800/80 px-4 py-1 text-xs flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
             <span className="relative flex h-2 w-2">
@@ -53,16 +69,26 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="hidden sm:inline text-slate-400">•</span>
           <span className="hidden sm:inline text-slate-400">Chain ID: <span className="font-mono text-slate-300">50312</span></span>
           <span className="hidden md:inline text-slate-400">•</span>
-          <span className="hidden md:inline text-slate-400">Sub-second Finality • 100k+ TPS EVM • Web 4.0 PQC Kyber-1024</span>
+          <span className="hidden md:inline text-slate-400">100k+ TPS EVM • Web 4.0 Quantum Secured</span>
         </div>
         <div className="flex items-center gap-3">
+          {hasInjectedWallet() && (
+            <button
+              onClick={handleAddSomnia}
+              disabled={networkAdding}
+              className="hidden lg:flex items-center gap-1 text-purple-400 hover:text-purple-300 transition-colors font-medium cursor-pointer"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>{networkAdding ? 'Adding...' : 'Add Somnia to MetaMask'}</span>
+            </button>
+          )}
           <button 
             onClick={onOpenFaucet}
             id="btn-nav-faucet"
             className="flex items-center gap-1 text-amber-400 hover:text-amber-300 transition-colors font-medium cursor-pointer"
           >
             <Droplet className="w-3.5 h-3.5" />
-            <span>Claim Test STT & USDso</span>
+            <span>Faucet (+5 STT, +1000 USDso)</span>
           </button>
         </div>
       </div>
@@ -237,36 +263,52 @@ export const Navbar: React.FC<NavbarProps> = ({
                   id="btn-wallet-connected"
                   className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-slate-100 text-xs font-mono transition-colors cursor-pointer"
                 >
-                  <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
                   <span>{wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}</span>
+                  <span className="hidden sm:inline text-[11px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                    {wallet.sttBalance.toFixed(2)} STT
+                  </span>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
 
                 {walletDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-64 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2">
-                    <div className="text-xs text-slate-400 mb-2 font-medium">
-                      Connected to Somnia Testnet
+                  <div className="absolute right-0 mt-2 w-72 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2">
+                    <div className="flex items-center justify-between text-xs text-slate-400 mb-2 font-medium">
+                      <span>Somnia Shannon Testnet</span>
+                      <span className="font-mono text-emerald-400 text-[11px]">ID: 50312</span>
                     </div>
                     <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-800/80 space-y-2 mb-3">
                       <div className="flex justify-between items-center text-xs">
                         <span className="text-slate-400">STT Balance (Gas):</span>
-                        <span className="font-mono text-emerald-400 font-semibold">{wallet.sttBalance.toFixed(3)} STT</span>
+                        <span className="font-mono text-emerald-400 font-semibold">{wallet.sttBalance.toFixed(4)} STT</span>
                       </div>
                       <div className="flex justify-between items-center text-xs">
-                        <span className="text-slate-400">USDso (Trading):</span>
-                        <span className="font-mono text-indigo-400 font-semibold">${wallet.usdsoBalance.toFixed(2)}</span>
+                        <span className="text-slate-400">USDso (Trading Capital):</span>
+                        <span className="font-mono text-indigo-400 font-semibold">${wallet.usdsoBalance.toFixed(2)} USDso</span>
                       </div>
                     </div>
+
+                    <a
+                      href={`https://shannon-explorer.somnia.network/address/${wallet.address}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full mb-2 py-1.5 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                      <span>View on Somnia Explorer</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+
                     <button
                       onClick={() => {
                         onOpenFaucet();
                         setWalletDropdownOpen(false);
                       }}
-                      className="w-full mb-2 py-1.5 px-2.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 text-xs font-medium border border-indigo-500/30 flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="w-full mb-2 py-1.5 px-2.5 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 text-xs font-medium border border-amber-500/30 flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <Coins className="w-3.5 h-3.5" />
-                      <span>Get Test Tokens</span>
+                      <span>Get Test Tokens (Faucet)</span>
                     </button>
+
                     <button
                       onClick={() => {
                         onConnectWallet();
