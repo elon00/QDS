@@ -281,3 +281,18 @@ export interface TransactionReceipt {
   status: 'CONFIRMED' | 'FAILED';
   pqcVerified?: boolean;
 }
+
+export interface PqcCoreKeyPair {
+  keyId: string;
+  algorithm: 'ML-KEM-768' | 'ML-DSA-65' | 'Hybrid-Ed25519-Dilithium';
+  publicKey: string;
+  publicKeyFingerprint?: string;
+  privateKeyPreview?: string;
+  secretKey?: string;
+  keySizeBits: number;
+  nistSecurityLevel?: number;
+  securityLevel?: number;
+  createdAt?: string;
+  generatedAt?: string;
+  authorizedForAgent?: boolean;
+}

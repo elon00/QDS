@@ -1,0 +1,44 @@
+{
+  "systemName": "QDS Quantitative Decision System & Somnia L1 PQC Protocol",
+  "version": "2.0.0",
+  "auditDate": "2026-09-07",
+  "license": "MIT",
+  "author": "Martin Luther",
+  "repository": "elon00/QDS",
+  "truthTaxonomy": {
+    "cryptographicCore": "PURE_TYPESCRIPT_PQC_EXECUTION",
+    "kemScheme": "NIST_FIPS_203_ML_KEM_768",
+    "signatureScheme": "NIST_FIPS_204_ML_DSA_65",
+    "somniaSmartContracts": "SOMNIA_SHANNON_EVENT_MARKET_ROUTER_V1",
+    "quantumVault": "ON_CHAIN_LATTICE_COMMITMENT_VAULT",
+    "conwayEngine": "CELLULAR_AUTOMATA_MARKET_ENTROPY",
+    "simulationEliminated": true,
+    "failClosedConjunction": true
+  },
+  "subsystems": [
+    {
+      "name": "QDSEventMarketRouter",
+      "path": "contracts/QDSEventMarketRouter.sol",
+      "nature": "ON_CHAIN_SOMNIA_EVENT_AMM",
+      "verified": true
+    },
+    {
+      "name": "QDSQuantumVault",
+      "path": "contracts/QDSQuantumVault.sol",
+      "nature": "ON_CHAIN_PQC_LATTICE_VAULT",
+      "verified": true
+    },
+    {
+      "name": "PqcCryptoEngine",
+      "path": "src/utils/pqcCrypto.ts",
+      "nature": "POST_QUANTUM_CRYPTO_CORE",
+      "verified": true
+    },
+    {
+      "name": "NistWycheproofSuite",
+      "path": "tests/nist-pqc.test.mjs",
+      "nature": "NIST_STANDARDS_VERIFICATION",
+      "verified": true
+    }
+  ]
+}
