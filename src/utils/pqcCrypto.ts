@@ -103,7 +103,7 @@ export function decapsulateKEM(ciphertextHex: string, secretKeyHex: string): str
  */
 export function createPqcHybridSignature(
   txId: string,
-  keyPair: PqcKeyPair,
+  keyPair: PqcCoreKeyPair,
   amount: number,
   serviceId: string
 ): {
@@ -227,4 +227,3 @@ export function verifyPqcMessage(signatureHex: string, message: string, publicKe
     return false;
   }
 }
-
