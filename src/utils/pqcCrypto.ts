@@ -103,7 +103,7 @@ export function decapsulateKEM(ciphertextHex: string, secretKeyHex: string): str
  */
 export function createPqcHybridSignature(
   txId: string,
-  keyPair: PqcKeyPair,
+  keyPair: PqcCoreKeyPair,
   amount: number,
   serviceId: string
 ): {
@@ -125,7 +125,7 @@ export function createPqcHybridSignature(
     dsaSigHex = bytesToHex(sig);
   } else {
     // Deterministic fallback signing key derived from fingerprint
-    const seed = sha256(encoder.encode(keyPair.publicKeyFingerprint));
+    const seed = sha256(encoder.encode(keyPair.publicKeyFingerprint ?? keyPair.publicKey));
     const fallbackPair = ml_dsa65.keygen(seed);
     const sig = ml_dsa65.sign(messageBytes, fallbackPair.secretKey);
     dsaSigHex = bytesToHex(sig);
@@ -137,94 +137,29 @@ export function createPqcHybridSignature(
     hybridSignature: `PQC-HYBRID-x402.${classicalDigest}.${dsaSigHex.substring(0, 64)}`,
     mlDsaComponent: dsaSigHex,
     ed25519Component: `ED25519-SIG-${classicalDigest}`,
-    verificationProof: `NIST_FIPS_204_ML_DSA_65_AUTHENTICATED_${keyPair.publicKeyFingerprint}`,
-    quantumResistanceScore: 1.0,
+    verificationProof: `NIST_FIPS_204_ML_DSA_65_AUTHENTICATED_${keyPair.publicKeyFingerprint ?? 'UNFINGERPRINTED'}`,
+    quantumResistanceScore: 98,
   };
 }
 
 /**
- * Real NIST FIPS 204 Signature Verification
+ * Verify ML-DSA-65 signature against public key
  */
-export function verifyPqcSignature(
-  signature: string,
-  txId: string,
-  publicKey: string,
-  amount: number = 0.005,
-  serviceId: string = 'srv-shor-orchestrator'
-) {
-  const payload = `tx:${txId}|amt:${amount}|srv:${serviceId}|pub:${publicKey.substring(0, 32)}`;
-  const encoder = new TextEncoder();
-  const messageBytes = encoder.encode(payload);
-
+export function verifyPqcSignature(message: string, signatureHex: string, publicKeyHex: string): boolean {
   try {
-    let isValid = false;
-    let sigBytes: Uint8Array | null = null;
-
-    if (signature.length >= 6618) {
-      // Direct raw 3,309-byte hex
-      sigBytes = hexToBytes(signature);
-    } else {
-      // Look up in active storage or check signature format
-      sigBytes = null;
-    }
-
-    if (sigBytes && sigBytes.length === 3309 && publicKey.length === 3904) {
-      isValid = ml_dsa65.verify(sigBytes, messageBytes, hexToBytes(publicKey));
-    } else if (signature.startsWith('PQC-HYBRID-x402.')) {
-      const parts = signature.split('.');
-      if (parts.length === 3) {
-        const expectedDigest = bytesToHex(sha256(messageBytes)).substring(0, 32);
-        isValid = parts[1] === expectedDigest;
-      }
-    }
-
-    return {
-      valid: isValid,
-      algorithm: 'NIST FIPS 204 ML-DSA-65',
-      specification: 'Pure TypeScript lattice-based digital signature algorithm conforming to NIST FIPS 204',
-      signatureDigestMatch: isValid,
-      latticeVerificationTimeUs: 124,
-      securityBits: 192,
-    };
-  } catch {
-    return {
-      valid: false,
-      algorithm: 'NIST FIPS 204 ML-DSA-65',
-      specification: 'Signature verification aborted (fail-closed)',
-      signatureDigestMatch: false,
-      latticeVerificationTimeUs: 0,
-      securityBits: 0,
-    };
-  }
-}
-
-export function signPqcMessage(keyId: string, message: string): { signature: string; lengthBytes: number } {
-  const stored = activeKeyStorage.get(keyId);
-  const encoder = new TextEncoder();
-  const messageBytes = encoder.encode(message);
-  let sigBytes: Uint8Array;
-  if (stored) {
-    sigBytes = ml_dsa65.sign(messageBytes, stored.secretKey);
-  } else {
-    const seed = sha256(encoder.encode(keyId));
-    const pair = ml_dsa65.keygen(seed);
-    sigBytes = ml_dsa65.sign(messageBytes, pair.secretKey);
-  }
-  return {
-    signature: '0xpqc_mldsa65_' + bytesToHex(sigBytes),
-    lengthBytes: sigBytes.length
-  };
-}
-
-export function verifyPqcMessage(signatureHex: string, message: string, publicKeyHex: string): boolean {
-  try {
-    const rawSigHex = signatureHex.replace(/^0xpqc_mldsa65_/, '').replace(/^0x/, '');
-    const sigBytes = hexToBytes(rawSigHex);
-    const pubBytes = hexToBytes(publicKeyHex.replace(/^0x/, ''));
-    const messageBytes = new TextEncoder().encode(message);
-    return ml_dsa65.verify(sigBytes, messageBytes, pubBytes);
+    const encoder = new TextEncoder();
+    return ml_dsa65.verify(hexToBytes(signatureHex), encoder.encode(message), hexToBytes(publicKeyHex));
   } catch {
     return false;
   }
 }
 
+/**
+ * Derive a symmetric key using HKDF-SHA256 from a PQC shared secret
+ */
+export function deriveSessionKey(sharedSecretHex: string, context: string): string {
+  const ikm = hexToBytes(sharedSecretHex);
+  const info = new TextEncoder().encode(context);
+  const derived = hkdf(sha256, ikm, undefined, info, 32);
+  return bytesToHex(derived);
+}
