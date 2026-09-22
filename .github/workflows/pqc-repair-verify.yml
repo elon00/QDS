@@ -6,7 +6,7 @@ on:
       - automation/fix-pqc-deps-20260922
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify:
@@ -31,5 +31,16 @@ jobs:
         run: npm run qmoosa:finish
       - name: Production security audit
         run: npm audit --omit=dev --audit-level=high
+      - name: Commit synchronized lockfile after green substantive gates
+        if: success()
+        run: |
+          if git diff --quiet -- package-lock.json; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore: synchronize package lock"
+          git push
       - name: Verify lockfile is reproducible
         run: git diff --exit-code -- package-lock.json
