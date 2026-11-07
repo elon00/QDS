@@ -1,0 +1,167 @@
+{
+  "engine": "REA_Reverse_Engineer_Anything",
+  "status": "STRUCTURE_RECONSTRUCTED",
+  "analyzed_files": 53,
+  "manifest": {
+    "bun.lock": {
+      "bytes": 73883
+    },
+    "Dockerfile": {
+      "bytes": 540
+    },
+    "index.html": {
+      "bytes": 842
+    },
+    "metadata.json": {
+      "bytes": 362
+    },
+    "nixpacks.toml": {
+      "bytes": 170
+    },
+    "package-lock.json": {
+      "bytes": 158377
+    },
+    "package.json": {
+      "bytes": 1215
+    },
+    "Procfile": {
+      "bytes": 16
+    },
+    "railway.json": {
+      "bytes": 277
+    },
+    "README.md": {
+      "bytes": 6849
+    },
+    "REALITY_MANIFEST.json": {
+      "bytes": 1352
+    },
+    "server.ts": {
+      "bytes": 18463
+    },
+    "tsconfig.json": {
+      "bytes": 534
+    },
+    "URS_EVIDENCE_CERTIFICATE.json": {
+      "bytes": 11818
+    },
+    "vite.config.ts": {
+      "bytes": 730
+    },
+    "contracts\\QDSBondingCurveToken.sol": {
+      "bytes": 5234
+    },
+    "contracts\\QDSConwayRegistry.sol": {
+      "bytes": 2138
+    },
+    "contracts\\QDSEventMarketRouter.sol": {
+      "bytes": 4994
+    },
+    "contracts\\QDSQuantumVault.sol": {
+      "bytes": 3023
+    },
+    "scripts\\audit-crypto.mjs": {
+      "bytes": 7196
+    },
+    "scripts\\deploy-somnia.js": {
+      "bytes": 4120
+    },
+    "scripts\\generate-urs-certificate.ts": {
+      "bytes": 4753
+    },
+    "scripts\\reality-universal.ts": {
+      "bytes": 17181
+    },
+    "scripts\\rea_inspector.py": {
+      "bytes": 1485
+    },
+    "scripts\\rsi_engine.py": {
+      "bytes": 2039
+    },
+    "src\\App.tsx": {
+      "bytes": 25522
+    },
+    "src\\index.css": {
+      "bytes": 24
+    },
+    "src\\main.tsx": {
+      "bytes": 241
+    },
+    "src\\types.ts": {
+      "bytes": 7587
+    },
+    "tests\\nist-pqc.test.mjs": {
+      "bytes": 4368
+    },
+    "tests\\reality_check_harness.py": {
+      "bytes": 1250
+    },
+    ".github\\workflows\\pqc-repair-verify.yml": {
+      "bytes": 1516
+    },
+    ".github\\workflows\\qmoosa-rsi-rea-sync.yml": {
+      "bytes": 531
+    },
+    "src\\components\\AgenticChatbot.tsx": {
+      "bytes": 26064
+    },
+    "src\\components\\AICopilotDrawer.tsx": {
+      "bytes": 10405
+    },
+    "src\\components\\BotKitStudio.tsx": {
+      "bytes": 16253
+    },
+    "src\\components\\ConwayAutomaton.tsx": {
+      "bytes": 23351
+    },
+    "src\\components\\FaucetModal.tsx": {
+      "bytes": 10075
+    },
+    "src\\components\\HackathonPitchDeck.tsx": {
+      "bytes": 8206
+    },
+    "src\\components\\MarketCard.tsx": {
+      "bytes": 6612
+    },
+    "src\\components\\MarketDetailModal.tsx": {
+      "bytes": 26971
+    },
+    "src\\components\\Navbar.tsx": {
+      "bytes": 18985
+    },
+    "src\\components\\PortfolioView.tsx": {
+      "bytes": 10921
+    },
+    "src\\components\\TokenLaunchpad.tsx": {
+      "bytes": 32370
+    },
+    "src\\components\\TransactionSigningModal.tsx": {
+      "bytes": 13883
+    },
+    "src\\components\\Web3StoryGuide.tsx": {
+      "bytes": 13566
+    },
+    "src\\components\\Web4PqcVault.tsx": {
+      "bytes": 16923
+    },
+    "src\\data\\conwayPresets.ts": {
+      "bytes": 2659
+    },
+    "src\\data\\launchpadTokens.ts": {
+      "bytes": 5370
+    },
+    "src\\data\\mockMarkets.ts": {
+      "bytes": 18388
+    },
+    "src\\data\\pqcData.ts": {
+      "bytes": 3758
+    },
+    "src\\utils\\pqcCrypto.ts": {
+      "bytes": 7789
+    },
+    "src\\utils\\web3.ts": {
+      "bytes": 5838
+    }
+  },
+  "timestamp": 1794019555
+}
