@@ -19,7 +19,7 @@ jobs:
       - name: Synchronize lock metadata
         run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
       - name: Capture synchronized lockfile
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: synchronized-package-lock
           path: package-lock.json
